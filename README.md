@@ -68,43 +68,43 @@ This package uses the [gorilla mux package](http://www.gorillatoolkit.org/pkg/mu
 
 Put this code into a `main.go` file:
 
-	package main
+		package main
 
-	import (
-		"github.com/gorilla/mux"
-		"github.com/sauerbraten/crudapi"
-		"log"
-		"net/http"
-	)
+		import (
+			"github.com/gorilla/mux"
+			"github.com/sauerbraten/crudapi"
+			"log"
+			"net/http"
+		)
 
-	func hello(resp http.ResponseWriter, req *http.Request) {
-		resp.Write([]byte("Hello there!"))
-	}
-
-	func main() {
-		// storage
-		s := crudapi.NewMapStorage()
-		s.AddMap("artists")
-		s.AddMap("albums")
-
-		// router
-		r := mux.NewRouter()
-
-		// mounting the API
-		crudapi.MountAPI(r.Host("api.localhost").PathPrefix("/v1").Subrouter(), s)
-
-		// custom handler
-		r.HandleFunc("/", hello)
-
-		// start listening
-		log.Println("server listening on localhost:8080")
-		log.Println("API on api.localhost:8080/v1/")
-
-		err := http.ListenAndServe(":8080", r)
-		if err != nil {
-			log.Println(err)
+		func hello(resp http.ResponseWriter, req *http.Request) {
+			resp.Write([]byte("Hello there!"))
 		}
-	}
+
+		func main() {
+			// storage
+		  store := crudapi.NewMapStorage()
+		  store.AddMap("artists")
+		  store.AddMap("albums")
+
+			// router
+			r := mux.NewRouter()
+
+			// mounting the API
+			crudapi.MountAPI(r.Host(HOST_NAME).PathPrefix(API_PREFIX).Subrouter(), api)
+
+			// custom handler
+			r.HandleFunc("/", hello)
+
+			// start listening
+			log.Println("server listening on localhost:8080")
+			log.Println("API on api.localhost:8080/v1/")
+
+			err := http.ListenAndServe(":8080", r)
+			if err != nil {
+				log.Println(err)
+			}
+		}
 
 When the server is running, check out the [index page](http://localhost:8080/) and try the following commands in a terminal:
 
