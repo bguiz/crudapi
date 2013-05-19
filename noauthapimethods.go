@@ -24,9 +24,6 @@ func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[strin
 
 func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Request) {
   vars, enc, dec := crudUnmarshall(resp, req)
-  // vars := mux.Vars(req)
-  // enc := json.NewEncoder(resp)
-  // dec := json.NewDecoder(req.Body)
   kind := vars["kind"]
 
   // read body and parse into interface{}
@@ -58,10 +55,9 @@ func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Reque
 }
 
 func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+  vars, enc, _ := crudUnmarshall(resp, req)
   kind := vars["kind"]
   id := vars["id"]
-  enc := json.NewEncoder(resp)
 
   // look for resource
   resource, stoResp := self.s.Get(kind, id)
@@ -75,10 +71,9 @@ func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request
   return
 }
 
-func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request) {  
+  vars, enc, _ := crudUnmarshall(resp, req)
   kind := vars["kind"]
-  enc := json.NewEncoder(resp)
 
   // look for resources
   resources, stoResp := self.s.GetAll(kind)
@@ -93,11 +88,9 @@ func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request
 }
 
 func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+  vars, enc, dec := crudUnmarshall(resp, req)
   kind := vars["kind"]
   id := vars["id"]
-  enc := json.NewEncoder(resp)
-  dec := json.NewDecoder(req.Body)
 
   // read body and parse into interface{}
   var resource map[string]interface{}
@@ -127,10 +120,9 @@ func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Reque
 }
 
 func (self NoAuthApiMethods) DeleteOne(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+  vars, enc, _ := crudUnmarshall(resp, req)
   kind := vars["kind"]
   id := vars["id"]
-  enc := json.NewEncoder(resp)
 
   // delete resource
   stoResp := self.s.Delete(kind, id)
@@ -145,9 +137,8 @@ func (self NoAuthApiMethods) DeleteOne(resp http.ResponseWriter, req *http.Reque
 }
 
 func (self NoAuthApiMethods) DeleteAll(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+  vars, enc, _ := crudUnmarshall(resp, req)
   kind := vars["kind"]
-  enc := json.NewEncoder(resp)
 
   // look for resources
   stoResp := self.s.DeleteAll(kind)
