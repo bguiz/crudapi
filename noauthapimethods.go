@@ -15,11 +15,19 @@ func NewNoAuthApiMethods(store Storage) NoAuthApiMethods {
   return NoAuthApiMethods{store}
 }
 
+func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[string]string, enc *json.Encoder, dec *json.Decoder) {
+  vars = mux.Vars(req)
+  enc = json.NewEncoder(resp)
+  dec = json.NewDecoder(req.Body)
+  return
+}
+
 func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Request) {
-  vars := mux.Vars(req)
+  vars, enc, dec := crudUnmarshall(resp, req)
+  // vars := mux.Vars(req)
+  // enc := json.NewEncoder(resp)
+  // dec := json.NewDecoder(req.Body)
   kind := vars["kind"]
-  enc := json.NewEncoder(resp)
-  dec := json.NewDecoder(req.Body)
 
   // read body and parse into interface{}
   var resource map[string]interface{}
