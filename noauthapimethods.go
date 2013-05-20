@@ -34,10 +34,8 @@ func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, e
 func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Request) {
 	//read request
 	vars, enc, dec := crudUnmarshall(resp, req)
-
 	//perform the action
 	respCode, apiResp := self.CreateOnePerform(vars, dec)
-
 	//write response
 	crudMarshall(resp, respCode, apiResp, enc)
 	return
@@ -50,8 +48,6 @@ func (self NoAuthApiMethods) CreateOnePerform(vars map[string]string, dec *json.
 	var resource map[string]interface{}
 	err := dec.Decode(&resource)
 
-	// var respCode int
-	// var apiResp apiResponse
 	if err != nil {
 		log.Println(err)
 		respCode = http.StatusBadRequest
@@ -68,10 +64,8 @@ func (self NoAuthApiMethods) CreateOnePerform(vars map[string]string, dec *json.
 func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request) {
 	//read request
 	vars, enc, dec := crudUnmarshall(resp, req)
-
 	//perform the action
 	respCode, apiResp := self.ReadOnePerform(vars, dec)
-
 	//write response
 	crudMarshall(resp, respCode, apiResp, enc)
 	return
@@ -89,20 +83,36 @@ func (self NoAuthApiMethods) ReadOnePerform(vars map[string]string, dec *json.De
 }
 
 func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request) {
-	vars, enc, _ := crudUnmarshall(resp, req)
+	//read request
+	vars, enc, dec := crudUnmarshall(resp, req)
+	//perform the action
+	respCode, apiResp := self.ReadAllPerform(vars, dec)
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) ReadAllPerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// look for resources
 	resources, stoResp := self.s.GetAll(kind)
-	apiResp := apiResponse{stoResp.Err, "", resources}
-
-	// write response
-	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
+	respCode = stoResp.StatusCode
+	apiResp = apiResponse{stoResp.Err, "", resources}
 	return
 }
 
 func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Request) {
+	//read request
 	vars, enc, dec := crudUnmarshall(resp, req)
+	//perform the action
+	respCode, apiResp := self.UpdateOnePerform(vars, dec)
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) UpdateOnePerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
@@ -110,8 +120,6 @@ func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Reque
 	var resource map[string]interface{}
 	err := dec.Decode(&resource)
 
-	var respCode int
-	var apiResp apiResponse
 	if err != nil {
 		log.Println(err)
 		respCode = http.StatusBadRequest
@@ -122,36 +130,47 @@ func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Reque
 		respCode = stoResp.StatusCode
 		apiResp = apiResponse{stoResp.Err, "", nil}
 	}
-
-	// write response
-	crudMarshall(resp, respCode, apiResp, enc)
 	return
 }
 
 func (self NoAuthApiMethods) DeleteOne(resp http.ResponseWriter, req *http.Request) {
-	vars, enc, _ := crudUnmarshall(resp, req)
+	//read request
+	vars, enc, dec := crudUnmarshall(resp, req)
+	//perform the action
+	respCode, apiResp := self.DeleteOnePerform(vars, dec)
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) DeleteOnePerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
 	// delete resource
 	stoResp := self.s.Delete(kind, id)
-	apiResp := apiResponse{stoResp.Err, "", nil}
-
-	// write response
-	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
+	respCode = stoResp.StatusCode
+	apiResp = apiResponse{stoResp.Err, "", nil}
 	return
 }
 
 func (self NoAuthApiMethods) DeleteAll(resp http.ResponseWriter, req *http.Request) {
-	vars, enc, _ := crudUnmarshall(resp, req)
+	//read request
+	vars, enc, dec := crudUnmarshall(resp, req)
+	//perform the action
+	respCode, apiResp := self.DeleteAllPerform(vars, dec)
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) DeleteAllPerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// look for resources
 	stoResp := self.s.DeleteAll(kind)
-	apiResp := apiResponse{stoResp.Err, "", nil}
-
-	// write response
-	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
+	respCode = stoResp.StatusCode
+	apiResp = apiResponse{stoResp.Err, "", nil}
 	return
 }
 
