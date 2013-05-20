@@ -6,15 +6,15 @@ import (
 	"net/http"
 )
 
-type NoAuthApiMethods struct {
+type DefaultApiMethods struct {
 	s Storage
 }
 
-func NewNoAuthApiMethods(store Storage) NoAuthApiMethods {
-	return NoAuthApiMethods{store}
+func NewDefaultApiMethods(store Storage) DefaultApiMethods {
+	return DefaultApiMethods{store}
 }
 
-func (self NoAuthApiMethods) CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// read body and parse into interface{}
@@ -34,7 +34,7 @@ func (self NoAuthApiMethods) CreateOne(vars map[string]string, dec *json.Decoder
 	return
 }
 
-func (self NoAuthApiMethods) ReadOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) ReadOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
@@ -45,7 +45,7 @@ func (self NoAuthApiMethods) ReadOne(vars map[string]string, dec *json.Decoder) 
 	return
 }
 
-func (self NoAuthApiMethods) ReadAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) ReadAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// look for resources
@@ -55,7 +55,7 @@ func (self NoAuthApiMethods) ReadAll(vars map[string]string, dec *json.Decoder) 
 	return
 }
 
-func (self NoAuthApiMethods) UpdateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) UpdateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
@@ -76,7 +76,7 @@ func (self NoAuthApiMethods) UpdateOne(vars map[string]string, dec *json.Decoder
 	return
 }
 
-func (self NoAuthApiMethods) DeleteOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) DeleteOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
@@ -87,7 +87,7 @@ func (self NoAuthApiMethods) DeleteOne(vars map[string]string, dec *json.Decoder
 	return
 }
 
-func (self NoAuthApiMethods) DeleteAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
+func (self DefaultApiMethods) DeleteAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// look for resources
@@ -97,7 +97,7 @@ func (self NoAuthApiMethods) DeleteAll(vars map[string]string, dec *json.Decoder
 	return
 }
 
-func (self NoAuthApiMethods) OptionsOne(resp http.ResponseWriter, req *http.Request) {
+func (self DefaultApiMethods) OptionsOne(resp http.ResponseWriter, req *http.Request) {
 	h := resp.Header()
 
 	h.Add("Allow", "PUT")
@@ -108,7 +108,7 @@ func (self NoAuthApiMethods) OptionsOne(resp http.ResponseWriter, req *http.Requ
 	resp.WriteHeader(http.StatusOK)
 	return
 }
-func (self NoAuthApiMethods) OptionsAll(resp http.ResponseWriter, req *http.Request) {
+func (self DefaultApiMethods) OptionsAll(resp http.ResponseWriter, req *http.Request) {
 	h := resp.Header()
 
 	h.Add("Allow", "POST")
