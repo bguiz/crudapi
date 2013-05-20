@@ -32,15 +32,26 @@ func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, e
 }
 
 func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Request) {
+	//read request
 	vars, enc, dec := crudUnmarshall(resp, req)
+
+	//perform the action
+	respCode, apiResp := self.CreateOnePerform(vars, dec)
+
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) CreateOnePerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
 	// read body and parse into interface{}
 	var resource map[string]interface{}
 	err := dec.Decode(&resource)
 
-	var respCode int
-	var apiResp apiResponse
+	// var respCode int
+	// var apiResp apiResponse
 	if err != nil {
 		log.Println(err)
 		respCode = http.StatusBadRequest
@@ -51,23 +62,29 @@ func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Reque
 		respCode = stoResp.StatusCode
 		apiResp = apiResponse{stoResp.Err, id, nil}
 	}
-
-	// write response
-	crudMarshall(resp, respCode, apiResp, enc)
 	return
 }
 
 func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request) {
-	vars, enc, _ := crudUnmarshall(resp, req)
+	//read request
+	vars, enc, dec := crudUnmarshall(resp, req)
+
+	//perform the action
+	respCode, apiResp := self.ReadOnePerform(vars, dec)
+
+	//write response
+	crudMarshall(resp, respCode, apiResp, enc)
+	return
+}
+
+func (self NoAuthApiMethods) ReadOnePerform(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
 
 	// look for resource
 	resource, stoResp := self.s.Get(kind, id)
-	apiResp := apiResponse{stoResp.Err, "", resource}
-
-	// write response
-	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
+	respCode = stoResp.StatusCode
+	apiResp = apiResponse{stoResp.Err, "", resource}
 	return
 }
 
