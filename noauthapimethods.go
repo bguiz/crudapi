@@ -43,16 +43,6 @@ func (self NoAuthApiMethods) CrudCall(crudMethod func(vars map[string]string, de
 	return
 }
 
-// func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.CreateOnePerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
-
 func (self NoAuthApiMethods) CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
@@ -73,16 +63,6 @@ func (self NoAuthApiMethods) CreateOne(vars map[string]string, dec *json.Decoder
 	return
 }
 
-// func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.ReadOnePerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
-
 func (self NoAuthApiMethods) ReadOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
@@ -94,16 +74,6 @@ func (self NoAuthApiMethods) ReadOne(vars map[string]string, dec *json.Decoder) 
 	return
 }
 
-// func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.ReadAllPerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
-
 func (self NoAuthApiMethods) ReadAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 
@@ -113,16 +83,6 @@ func (self NoAuthApiMethods) ReadAll(vars map[string]string, dec *json.Decoder) 
 	apiResp = apiResponse{stoResp.Err, "", resources}
 	return
 }
-
-// func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.UpdateOnePerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
 
 func (self NoAuthApiMethods) UpdateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
@@ -145,16 +105,6 @@ func (self NoAuthApiMethods) UpdateOne(vars map[string]string, dec *json.Decoder
 	return
 }
 
-// func (self NoAuthApiMethods) DeleteOne(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.DeleteOnePerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
-
 func (self NoAuthApiMethods) DeleteOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]
 	id := vars["id"]
@@ -165,16 +115,6 @@ func (self NoAuthApiMethods) DeleteOne(vars map[string]string, dec *json.Decoder
 	apiResp = apiResponse{stoResp.Err, "", nil}
 	return
 }
-
-// func (self NoAuthApiMethods) DeleteAll(resp http.ResponseWriter, req *http.Request) {
-// 	//read request
-// 	vars, enc, dec := crudUnmarshall(resp, req)
-// 	//perform the action
-// 	respCode, apiResp := self.DeleteAllPerform(vars, dec)
-// 	//write response
-// 	crudMarshall(resp, respCode, apiResp, enc)
-// 	return
-// }
 
 func (self NoAuthApiMethods) DeleteAll(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
 	kind := vars["kind"]

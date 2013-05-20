@@ -6,19 +6,6 @@ import (
 )
 
 type ApiMethods interface {
-	// CreateOne(resp http.ResponseWriter, req *http.Request)
-
-	// ReadOne(resp http.ResponseWriter, req *http.Request)
-	// ReadAll(resp http.ResponseWriter, req *http.Request)
-
-	// UpdateOne(resp http.ResponseWriter, req *http.Request)
-
-	// DeleteOne(resp http.ResponseWriter, req *http.Request)
-	// DeleteAll(resp http.ResponseWriter, req *http.Request)
-
-	// OptionsOne(resp http.ResponseWriter, req *http.Request)
-	// OptionsAll(resp http.ResponseWriter, req *http.Request)
-
 	CrudCall(crudMethod func(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)) (httpMethod func(resp http.ResponseWriter, req *http.Request))
 
 	CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)
