@@ -21,18 +21,18 @@ type apiResponse struct {
 func MountAPI(router *mux.Router, api ApiMethods) {
 
 	// Create
-	router.HandleFunc("/{kind}", api.CreateOne).Methods("POST")
+	router.HandleFunc("/{kind}", api.CrudCall(api.CreateOne)).Methods("POST")
 
 	// Read
-	router.HandleFunc("/{kind}", api.ReadAll).Methods("GET")
-	router.HandleFunc("/{kind}/{id}", api.ReadOne).Methods("GET")
+	router.HandleFunc("/{kind}", api.CrudCall(api.ReadAll)).Methods("GET")
+	router.HandleFunc("/{kind}/{id}", api.CrudCall(api.ReadOne)).Methods("GET")
 
 	// Update
-	router.HandleFunc("/{kind}/{id}", api.UpdateOne).Methods("PUT")
+	router.HandleFunc("/{kind}/{id}", api.CrudCall(api.UpdateOne)).Methods("PUT")
 
 	// Delete
-	router.HandleFunc("/{kind}", api.DeleteAll).Methods("DELETE")
-	router.HandleFunc("/{kind}/{id}", api.DeleteOne).Methods("DELETE")
+	router.HandleFunc("/{kind}", api.CrudCall(api.DeleteAll)).Methods("DELETE")
+	router.HandleFunc("/{kind}/{id}", api.CrudCall(api.DeleteOne)).Methods("DELETE")
 
 	// Options routes for API discovery
 	router.HandleFunc("/{kind}", api.OptionsAll).Methods("OPTIONS")
