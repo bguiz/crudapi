@@ -21,8 +21,8 @@ func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[strin
 	return
 }
 
-func crudMarshall(resp http.ResponseWriter, stoResp StorageResponse, apiResp apiResponse, enc *json.Encoder) {
-	resp.WriteHeader(stoResp.StatusCode)
+func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, enc *json.Encoder) {
+	resp.WriteHeader(respCode)
 	enc = json.NewEncoder(resp)
 	err := enc.Encode(apiResp)
 	if err != nil {
@@ -39,24 +39,21 @@ func (self NoAuthApiMethods) CreateOne(resp http.ResponseWriter, req *http.Reque
 	var resource map[string]interface{}
 	err := dec.Decode(&resource)
 
+	var respCode int
+	var apiResp apiResponse
 	if err != nil {
 		log.Println(err)
-
-		resp.WriteHeader(http.StatusBadRequest)
-		err = enc.Encode(apiResponse{"malformed json", "", nil})
-		if err != nil {
-			log.Println(err)
-		}
-
-		return
+		respCode = http.StatusBadRequest
+		apiResp = apiResponse{"malformed json", "", nil}
+	} else {
+		// set in storage
+		id, stoResp := self.s.Create(kind, resource)
+		respCode = stoResp.StatusCode
+		apiResp = apiResponse{stoResp.Err, id, nil}
 	}
 
-	// set in storage
-	id, stoResp := self.s.Create(kind, resource)
-	apiResp := apiResponse{stoResp.Err, id, nil}
-
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, respCode, apiResp, enc)
 	return
 }
 
@@ -70,7 +67,7 @@ func (self NoAuthApiMethods) ReadOne(resp http.ResponseWriter, req *http.Request
 	apiResp := apiResponse{stoResp.Err, "", resource}
 
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
 	return
 }
 
@@ -83,7 +80,7 @@ func (self NoAuthApiMethods) ReadAll(resp http.ResponseWriter, req *http.Request
 	apiResp := apiResponse{stoResp.Err, "", resources}
 
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
 	return
 }
 
@@ -96,23 +93,21 @@ func (self NoAuthApiMethods) UpdateOne(resp http.ResponseWriter, req *http.Reque
 	var resource map[string]interface{}
 	err := dec.Decode(&resource)
 
+	var respCode int
+	var apiResp apiResponse
 	if err != nil {
 		log.Println(err)
-		resp.WriteHeader(http.StatusBadRequest)
-		err = enc.Encode(apiResponse{"malformed json", "", nil})
-		if err != nil {
-			log.Println(err)
-		}
-
-		return
+		respCode = http.StatusBadRequest
+		apiResp = apiResponse{"malformed json", "", nil}
+	} else {
+		// update resource
+		stoResp := self.s.Update(kind, id, resource)
+		respCode = stoResp.StatusCode
+		apiResp = apiResponse{stoResp.Err, "", nil}
 	}
 
-	// update resource
-	stoResp := self.s.Update(kind, id, resource)
-	apiResp := apiResponse{stoResp.Err, "", nil}
-
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, respCode, apiResp, enc)
 	return
 }
 
@@ -126,7 +121,7 @@ func (self NoAuthApiMethods) DeleteOne(resp http.ResponseWriter, req *http.Reque
 	apiResp := apiResponse{stoResp.Err, "", nil}
 
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
 	return
 }
 
@@ -139,7 +134,7 @@ func (self NoAuthApiMethods) DeleteAll(resp http.ResponseWriter, req *http.Reque
 	apiResp := apiResponse{stoResp.Err, "", nil}
 
 	// write response
-	crudMarshall(resp, stoResp, apiResp, enc)
+	crudMarshall(resp, stoResp.StatusCode, apiResp, enc)
 	return
 }
 
