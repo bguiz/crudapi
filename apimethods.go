@@ -6,8 +6,6 @@ import (
 )
 
 type ApiMethods interface {
-	CrudCall(crudMethod func(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)) (httpMethod func(resp http.ResponseWriter, req *http.Request))
-
 	CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)
 
 	ReadOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)

@@ -2,7 +2,6 @@ package crudapi
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
@@ -13,34 +12,6 @@ type NoAuthApiMethods struct {
 
 func NewNoAuthApiMethods(store Storage) NoAuthApiMethods {
 	return NoAuthApiMethods{store}
-}
-
-func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[string]string, enc *json.Encoder, dec *json.Decoder) {
-	vars = mux.Vars(req)
-	dec = json.NewDecoder(req.Body)
-	return
-}
-
-func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, enc *json.Encoder) {
-	resp.WriteHeader(respCode)
-	enc = json.NewEncoder(resp)
-	err := enc.Encode(apiResp)
-	if err != nil {
-		log.Println(err)
-	}
-	return
-}
-
-func (self NoAuthApiMethods) CrudCall(crudMethod func(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)) (httpMethod func(resp http.ResponseWriter, req *http.Request)) {
-	httpMethod = func(resp http.ResponseWriter, req *http.Request) {
-		//read request
-		vars, enc, dec := crudUnmarshall(resp, req)
-		//perform the action
-		respCode, apiResp := crudMethod(vars, dec)
-		//write response
-		crudMarshall(resp, respCode, apiResp, enc)
-	}
-	return
 }
 
 func (self NoAuthApiMethods) CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
