@@ -23,12 +23,12 @@ type apiResponse struct {
 func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[string]string, enc *json.Encoder, dec *json.Decoder) {
 	vars = mux.Vars(req)
 	dec = json.NewDecoder(req.Body)
+	enc = json.NewEncoder(resp)
 	return
 }
 
 func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, enc *json.Encoder) {
 	resp.WriteHeader(respCode)
-	enc = json.NewEncoder(resp)
 	err := enc.Encode(apiResp)
 	if err != nil {
 		log.Println(err)
