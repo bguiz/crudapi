@@ -20,15 +20,15 @@ type apiResponse struct {
 	Result interface{} `json:"result,omitempty"`
 }
 
-func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[string]string, enc *json.Encoder, dec *json.Decoder) {
+func crudUnmarshall(resp http.ResponseWriter, req *http.Request) (vars map[string]string, dec *json.Decoder) {
 	vars = mux.Vars(req)
 	dec = json.NewDecoder(req.Body)
-	enc = json.NewEncoder(resp)
 	return
 }
 
-func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, enc *json.Encoder) {
+func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse) {
 	resp.WriteHeader(respCode)
+	enc := json.NewEncoder(resp)
 	err := enc.Encode(apiResp)
 	if err != nil {
 		log.Println(err)
@@ -39,11 +39,11 @@ func crudMarshall(resp http.ResponseWriter, respCode int, apiResp apiResponse, e
 func crudCall(crudMethod func(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse)) (httpMethod func(resp http.ResponseWriter, req *http.Request)) {
 	httpMethod = func(resp http.ResponseWriter, req *http.Request) {
 		//read request
-		vars, enc, dec := crudUnmarshall(resp, req)
+		vars, dec := crudUnmarshall(resp, req)
 		//perform the action
 		respCode, apiResp := crudMethod(vars, dec)
 		//write response
-		crudMarshall(resp, respCode, apiResp, enc)
+		crudMarshall(resp, respCode, apiResp)
 	}
 	return
 }
