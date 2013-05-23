@@ -8,10 +8,14 @@ import (
 
 type DefaultApiMethods struct {
 	s Storage
+	g Guard
 }
 
-func NewDefaultApiMethods(store Storage) DefaultApiMethods {
-	return DefaultApiMethods{store}
+func NewDefaultApiMethods(store Storage, guard Guard) DefaultApiMethods {
+	if guard == nil {
+		guard = defaultGuard{}
+	}
+	return DefaultApiMethods{store, guard}
 }
 
 func (self DefaultApiMethods) CreateOne(vars map[string]string, dec *json.Decoder) (respCode int, apiResp apiResponse) {
