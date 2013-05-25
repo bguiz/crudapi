@@ -13,7 +13,7 @@ type DefaultApiMethods struct {
 
 func NewDefaultApiMethods(store Storage, guard Guard) DefaultApiMethods {
 	if guard == nil {
-		guard = defaultGuard{}
+		guard = noopGuard{}
 	}
 	return DefaultApiMethods{store, guard}
 }

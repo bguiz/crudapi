@@ -27,15 +27,15 @@ type Guard interface {
 	Authorize(client string, action Action, vars UrlVars) (ok bool, errorMessage string)
 }
 
-// default guard; allows everyone to do everything
-type defaultGuard struct{}
+// no-op guard; allows everyone to do everything
+type noopGuard struct{}
 
-func (d defaultGuard) Authenticate(params url.Values) (ok bool, client string, errorMessage string) {
+func (d noopGuard) Authenticate(params url.Values) (ok bool, client string, errorMessage string) {
 	ok = true
 	return
 }
 
-func (d defaultGuard) Authorize(client string, action Action, vars UrlVars) (ok bool, errorMessage string) {
+func (d noopGuard) Authorize(client string, action Action, vars UrlVars) (ok bool, errorMessage string) {
 	ok = true
 	return
 }
